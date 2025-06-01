@@ -1,0 +1,8 @@
+# .gitignore
+saved_model/
+__pycache__/
+*.pyc
+*.pkl
+venv/
+.env
+ai-sentiment-analyzer-model/
