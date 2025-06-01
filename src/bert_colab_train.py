@@ -1,3 +1,4 @@
+# Step 2: Your training code (after restarting runtime)
 import os
 import pickle
 import numpy as np
@@ -14,6 +15,10 @@ from transformers import (
 from datasets import Dataset
 from sklearn.metrics import accuracy_score, f1_score
 
+# Upload your files manually in Colab or mount Drive (change as needed)
+from google.colab import files
+uploaded = files.upload()
+
 # Load and preprocess data
 def load_data(filepath):
     df = pd.read_csv(filepath, sep=";", names=["text", "label"])
@@ -21,8 +26,8 @@ def load_data(filepath):
     df["text"] = df["text"].str.strip().str.lower()
     return df
 
-train_df = load_data("data/train.txt")
-test_df = load_data("data/test.txt")
+train_df = load_data("train.txt")
+test_df = load_data("test.txt")
 
 # Label encoding
 le = LabelEncoder()
@@ -71,7 +76,7 @@ model = DistilBertForSequenceClassification.from_pretrained(
 
 # Training arguments
 training_args = TrainingArguments(
-    output_dir="results",
+    output_dir="./results",
     num_train_epochs=3,
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
@@ -110,9 +115,8 @@ trainer.train()
 model.save_pretrained("saved_model")
 tokenizer.save_pretrained("saved_model")
 
-# # Zip and download
-# import shutil
-# shutil.make_archive("bert_emotion_model", "zip", "saved_model")
+# Zip and download model folder
+import shutil
+shutil.make_archive("bert_emotion_model", "zip", "saved_model")
 
-# from google.colab import files
-# files.download("bert_emotion_model.zip")
+files.download("bert_emotion_model.zip")
